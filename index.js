@@ -14,14 +14,16 @@ app.get("/", function(req, res) {
 //invoked after hitting go in the html form
 app.post("/", function(req, res) {
     
-    // takes in the city name from the html form, display in // console. Takes in as string, ex. for city wailuku
-        var cityName = String(req.body.cityNameInput);
-        console.log(req.body.cityNameInput);
+    // takes in the longitude and latitude from the html form, display in // console. Takes in as string, ex. for city wailuku
+        var latNum = String(req.body.latNumInput);
+        console.log(req.body.latNumInput);
+        var lonNum = String(req.body.lonNumInput);
+        console.log(req.body.latNumInput);
     
     //build up the URL for the JSON query, API Key is // secret and needs to be obtained by signup 
         const units = "imperial";
         const apiKey = "0d571fefe8873eb93a636e7913067f59";
-        const url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName +  "&units=" + units + "&APPID=" + apiKey;
+        const url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latNum + "&lon=" + lonNum + "&units=" + units + "&APPID=" + apiKey;
     
     // this gets the data from Open WeatherPI
     https.get(url, function(response){
@@ -34,7 +36,8 @@ app.post("/", function(req, res) {
             const city = weatherData.name;
             const weatherDescription = weatherData.weather[0].description;
           const humidity = weatherData.main.humidity;
-          const wind = weatherData.wind.speed
+          const wind = weatherData.wind.speed;
+          const cloudiness = weatherData.clouds.all;
             const icon = weatherData.weather[0].icon;
             const imageURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
             
@@ -43,6 +46,7 @@ app.post("/", function(req, res) {
             res.write("<h2>The Temperature in " + city + " is " + temp + " Degrees Fahrenheit<h2>");
            res.write("<h1> The humidity is currently " + humidity + " % <h1>");
           res.write("<h1> The wind speed is currently " + wind + " mps <h1>");
+          res.write("<h1> The cloudiness is currently " + cloudiness + " % <h1>");
             res.write("<img src=" + imageURL +">");
             res.send();
         });
